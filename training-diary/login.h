@@ -29,6 +29,9 @@ private slots:
 
     void on_signUp_linkActivated(const QString &link);
 
+    void onSignInSuccess();
+    void onSignInFailed();
+
 private:
     Ui::Login *ui;
     DBManager* dbManager;

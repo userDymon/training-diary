@@ -41,8 +41,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &context, con
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    //MainWindow w;
-    //w.show();
+
     qInstallMessageHandler(customMessageHandler);
 
     DBManager *dbManager = SqlDBManager::getInstance();

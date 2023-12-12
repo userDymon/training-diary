@@ -17,6 +17,9 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
         <string>Workout</string>
@@ -30,7 +33,7 @@
           <item>
            <widget class="QPushButton" name="pushButton">
             <property name="text">
-             <string>add a workout</string>
+             <string>add a exercize</string>
             </property>
            </widget>
           </item>

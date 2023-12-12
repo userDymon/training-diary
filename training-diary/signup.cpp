@@ -12,6 +12,7 @@ SignUp::SignUp(DBManager* dbManager, QWidget *parent) :
     ui(new Ui::SignUp)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Training diary");
     ui->createPasswordLine->setEchoMode(QLineEdit::Password);
     ui->confirmPasswordLine->setEchoMode(QLineEdit::Password);
     ui->signIn->setText("<a href='#'>Sign In</a>");
@@ -33,13 +34,17 @@ void SignUp::on_submitPB_clicked()
 {
     QString login = ui->loginLine->text();
 
-    if(ui->createPasswordLine->text() == ui->confirmPasswordLine->text()){
-        QByteArray hashedPassword = QCryptographicHash::hash(ui->createPasswordLine->text().toUtf8(), QCryptographicHash::Sha256);
-        User newUser(ui->loginLine->text(), hashedPassword);
-        dbManager->insertIntoTable(newUser);
-        this->accept();
+    if(ui->loginLine->text().isEmpty() || ui->createPasswordLine->text().isEmpty() || ui->confirmPasswordLine->text().isEmpty()){
+        QMessageBox::critical(this, "Error", "All fields must be filled");
     }else{
-        QMessageBox::critical(this, "Помилка", "Паролі повинні співпадати");
+        if(ui->createPasswordLine->text() == ui->confirmPasswordLine->text() ){
+            QByteArray hashedPassword = QCryptographicHash::hash(ui->createPasswordLine->text().toUtf8(), QCryptographicHash::Sha256);
+            User newUser(ui->loginLine->text(), hashedPassword);
+            dbManager->insertIntoTable(newUser);
+            this->accept();
+        }else{
+            QMessageBox::critical(this, "Error", "Passwords must match");
+        }
     }
 }
 

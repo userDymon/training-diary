@@ -11,12 +11,22 @@ Login::Login(DBManager* dbManager, QWidget *parent)
     : QDialog(parent), dbManager(dbManager),  ui(new Ui::Login)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Training diary");
     ui->passwordLine->setEchoMode(QLineEdit::Password);
     ui->signUp->setText("<a href='#'>Sign Up</a>");
+
     connect(ui->signUp, SIGNAL(linkActivated(const QString&)), this, SLOT(on_signUp_linkActivated()));
+    connect(this, &Login::signInSuccess, this, &Login::onSignInSuccess);
+    connect(this, &Login::signInFailed, this, &Login::onSignInFailed);
 
     signUp = new SignUp(dbManager);
     signUp->setModal(true);
+}
+
+
+Login::~Login()
+{
+    delete ui;
 }
 
 void Login::attemptSignIn(const QString& login, const QString& password) {
@@ -30,27 +40,34 @@ void Login::attemptSignIn(const QString& login, const QString& password) {
     if (dbManager->selectFromTable(user)) {
         emit signInSuccess();
 
-        // При успішному вході, створіть головне вікно та відобразіть його
-        MainWindow* mainWindow = new MainWindow(true);
+        MainWindow* mainWindow = new MainWindow();
         mainWindow->show();
     } else {
         emit signInFailed("Incorrect login or password.");
     }
 }
 
-Login::~Login()
-{
-    delete ui;
-}
-
 void Login::on_submitPB_clicked()
 {
-    attemptSignIn(ui->loginLine->text(), ui->passwordLine->text());
+    if(ui->loginLine->text().isEmpty() || ui->passwordLine->text().isEmpty()){
+        QMessageBox::critical(this, "Error", "All fields must be filled");
+    }else{
+        attemptSignIn(ui->loginLine->text(), ui->passwordLine->text());
+    }
 }
 
 
 void Login::on_signUp_linkActivated(const QString &link)
 {
     signUp->show();
+}
+
+void Login::onSignInSuccess() {
+    QMessageBox::information(this, "Success", "Login successful");
+    this->accept();
+}
+
+void Login::onSignInFailed() {
+    QMessageBox::critical(this, "Error", "Login failed. Check your credentials.");
 }
 

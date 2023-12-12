@@ -45,7 +45,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Login</string>
+        <string>Sign in</string>
        </property>
       </widget>
      </item>

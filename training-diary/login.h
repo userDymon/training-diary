@@ -2,8 +2,10 @@
 #define LOGIN_H
 
 #include <QDialog>
+#include <QLabel>
 
 #include "dbmanager.h"
+#include "signup.h"
 
 namespace Ui {
 class Login;
@@ -25,9 +27,12 @@ private slots:
     void attemptSignIn(const QString& login, const QString& password);
     void on_submitPB_clicked();
 
+    void on_signUp_linkActivated(const QString &link);
+
 private:
     Ui::Login *ui;
     DBManager* dbManager;
+    SignUp *signUp;
 };
 
 #endif // LOGIN_H

@@ -2,13 +2,21 @@
 #include "ui_login.h"
 #include "user.h"
 #include "mainwindow.h"
+#include "signup.h"
 
 #include <QCryptographicHash>
+#include <QMessageBox>
 
 Login::Login(DBManager* dbManager, QWidget *parent)
     : QDialog(parent), dbManager(dbManager),  ui(new Ui::Login)
 {
     ui->setupUi(this);
+    ui->passwordLine->setEchoMode(QLineEdit::Password);
+    ui->signUp->setText("<a href='#'>Sign Up</a>");
+    connect(ui->signUp, SIGNAL(linkActivated(const QString&)), this, SLOT(on_signUp_linkActivated()));
+
+    signUp = new SignUp(dbManager);
+    signUp->setModal(true);
 }
 
 void Login::attemptSignIn(const QString& login, const QString& password) {
@@ -38,5 +46,11 @@ Login::~Login()
 void Login::on_submitPB_clicked()
 {
     attemptSignIn(ui->loginLine->text(), ui->passwordLine->text());
+}
+
+
+void Login::on_signUp_linkActivated(const QString &link)
+{
+    signUp->show();
 }
 

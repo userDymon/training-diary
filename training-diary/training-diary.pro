@@ -12,6 +12,7 @@ SOURCES += \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
+    signup.cpp \
     sqldbmanager.cpp \
     user.cpp
 
@@ -19,12 +20,14 @@ HEADERS += \
     dbmanager.h \
     login.h \
     mainwindow.h \
+    signup.h \
     sqldbmanager.h \
     user.h
 
 FORMS += \
     login.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    signup.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

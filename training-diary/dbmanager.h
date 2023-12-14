@@ -14,6 +14,7 @@ public:
     virtual QSqlDatabase getDB() = 0;
     virtual bool insertIntoTable(User &) = 0;
     virtual bool insertIntoTable(Exercise &, QString) = 0;
+    virtual bool insertIntoTable(Exercise &, QString, QString) = 0;
     virtual bool selectFromTable(User &) = 0;
     virtual bool haveUser(QString &) = 0;
 };

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>442</width>
+    <width>602</width>
     <height>519</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="workoutTab">
        <attribute name="title">
@@ -65,7 +65,57 @@
        <attribute name="title">
         <string>Schedule</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4"/>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QComboBox" name="comboBox">
+          <item>
+           <property name="text">
+            <string>Monday</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tuesday</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Wednesday</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Thursday</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Friday</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Saturday</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sunday</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="scheduleTableView"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="addExerciseSchedulePB">
+          <property name="text">
+           <string>add exercise</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="goalsTab">
        <attribute name="title">
@@ -87,7 +137,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>442</width>
+     <width>602</width>
      <height>21</height>
     </rect>
    </property>

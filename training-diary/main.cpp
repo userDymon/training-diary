@@ -50,15 +50,15 @@ int main(int argc, char *argv[])
 
     dbManager->connectToDataBase();
 
-    Login l(dbManager);
-    l.show();
+    //Login l(dbManager);
+    //l.show();
 
-    /*
+    ///*
     QByteArray hashedPassword = QCryptographicHash::hash("1234", QCryptographicHash::Sha256);
     User *user = new User("dmytro", QString(hashedPassword));
     MainWindow w(dbManager, user);
     w.show();
-    */
+    //*/
 
     return a.exec();
 }

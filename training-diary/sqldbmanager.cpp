@@ -1,6 +1,7 @@
 #include "sqldbmanager.h"
 
 #include <QDate>
+#include <QDateTime>
 #include <QDebug>
 #include <QFile>
 #include <QObject>
@@ -88,7 +89,23 @@ bool SqlDBManager::createTables()
                         weight INTEGER NOT NULL,\
                         sets INTEGER NOT NULL,\
                         reps INTEGER NOT NULL,\
-                        date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+                        date DATE,\
+                        FOREIGN KEY (user_id) REFERENCES users(id)\
+                        )\
+    ")) {
+        qDebug() << "DataBase: error of create table exercise";
+        qDebug() << query.lastError().text();
+        return false;
+    }
+
+    if(!query.exec("\
+                    CREATE TABLE scheduleExercises (\
+                        user_id INTEGER,\
+                        name VARCHAR(255) NOT NULL,\
+                        weight INTEGER NOT NULL,\
+                        sets INTEGER NOT NULL,\
+                        reps INTEGER NOT NULL,\
+                        dayOfWeek VARCHAR(10) NOT NULL,\
                         FOREIGN KEY (user_id) REFERENCES users(id)\
                         )\
     ")) {
@@ -123,15 +140,41 @@ bool SqlDBManager::insertIntoTable(User &user)
 bool SqlDBManager::insertIntoTable(Exercise &exercise, QString login)
 {
     QSqlQuery query;
+    QDate currentDate = QDate::currentDate();
 
     query.prepare(
-        "INSERT INTO exercises (user_id, name, weight, sets, reps)\
-        VALUES((SELECT id FROM users WHERE login = :login), :name, :weight, :sets, :reps)");
+        "INSERT INTO exercises (user_id, name, weight, sets, reps, date)\
+        VALUES((SELECT id FROM users WHERE login = :login), :name, :weight, :sets, :reps, :date)");
     query.bindValue(":login", login);
     query.bindValue(":name", exercise.getName());
     query.bindValue(":weight", exercise.getWeight());
     query.bindValue(":sets", exercise.getSets());
     query.bindValue(":reps", exercise.getReps());
+    query.bindValue(":date", currentDate);
+
+    if (!query.exec()) {
+        qDebug() << "error insert into table exercises";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+
+        return false;
+    } else
+        return true;
+}
+
+bool SqlDBManager::insertIntoTable(Exercise &exercise, QString login, QString dayOfWeek)
+{
+    QSqlQuery query;
+
+    query.prepare(
+        "INSERT INTO scheduleExercises (user_id, name, weight, sets, reps, dayOfWeek)\
+        VALUES((SELECT id FROM users WHERE login = :login), :name, :weight, :sets, :reps, :dayOfWeek)");
+    query.bindValue(":login", login);
+    query.bindValue(":name", exercise.getName());
+    query.bindValue(":weight", exercise.getWeight());
+    query.bindValue(":sets", exercise.getSets());
+    query.bindValue(":reps", exercise.getReps());
+    query.bindValue(":dayOfWeek", dayOfWeek);
 
     if (!query.exec()) {
         qDebug() << "error insert into table exercises";

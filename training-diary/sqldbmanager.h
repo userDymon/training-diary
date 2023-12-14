@@ -21,6 +21,7 @@ public:
     QSqlDatabase getDB() override;
     bool insertIntoTable(User &) override;
     bool insertIntoTable(Exercise &, QString) override;
+    bool insertIntoTable(Exercise &, QString, QString) override;
     bool selectFromTable(User &) override;
     bool haveUser(QString &) override;
 

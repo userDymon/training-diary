@@ -14,6 +14,7 @@ SOURCES += \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
+    scheduleexercise.cpp \
     signup.cpp \
     sqldbmanager.cpp \
     user.cpp
@@ -24,6 +25,7 @@ HEADERS += \
     exercizedialog.h \
     login.h \
     mainwindow.h \
+    scheduleexercise.h \
     signup.h \
     sqldbmanager.h \
     user.h
@@ -32,6 +34,7 @@ FORMS += \
     exercizedialog.ui \
     login.ui \
     mainwindow.ui \
+    scheduleexercise.ui \
     signup.ui
 
 # Default rules for deployment.

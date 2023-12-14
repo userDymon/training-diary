@@ -5,16 +5,18 @@
 
 class Exercise {
 public:
-    Exercise(const QString& name, int sets, int repsPerSet);
+    Exercise(const QString& name, int weight, int sets, int reps);
 
     QString getName() const;
+    int getWeight() const;
     int getSets() const;
-    int getRepsPerSet() const;
+    int getReps() const;
 
 private:
     QString name;
+    int weight;
     int sets;
-    int repsPerSet;
+    int reps;
 };
 
 #endif // EXERCISE_H

@@ -34,13 +34,13 @@ void Login::attemptSignIn(const QString& login, const QString& password) {
     QByteArray hashedPassword = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256);
 
     // Створюємо об'єкт користувача зі введеними даними
-    User user(login, QString(hashedPassword));
+    user = new User(login, QString(hashedPassword));
 
     // Перевірка наявності користувача в базі даних
-    if (dbManager->selectFromTable(user)) {
+    if (dbManager->selectFromTable(*user)) {
         emit signInSuccess();
 
-        MainWindow* mainWindow = new MainWindow();
+        MainWindow* mainWindow = new MainWindow(dbManager, user);
         mainWindow->show();
     } else {
         emit signInFailed("Incorrect login or password.");

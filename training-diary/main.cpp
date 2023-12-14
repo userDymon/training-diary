@@ -2,7 +2,9 @@
 #include "login.h"
 #include "dbmanager.h"
 #include "sqldbmanager.h"
+#include "user.h"
 
+#include <QCryptographicHash>
 #include <QApplication>
 #include <QCoreApplication>
 #include <QFile>
@@ -50,6 +52,13 @@ int main(int argc, char *argv[])
 
     Login l(dbManager);
     l.show();
+
+    /*
+    QByteArray hashedPassword = QCryptographicHash::hash("1234", QCryptographicHash::Sha256);
+    User *user = new User("dmytro", QString(hashedPassword));
+    MainWindow w(dbManager, user);
+    w.show();
+    */
 
     return a.exec();
 }

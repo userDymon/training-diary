@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
+    <width>442</width>
     <height>519</height>
    </rect>
   </property>
@@ -14,13 +14,16 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="workoutTab">
        <attribute name="title">
         <string>Workout</string>
        </attribute>
@@ -28,7 +31,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit"/>
+           <widget class="QListWidget" name="listWidget"/>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton">
@@ -41,9 +44,37 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="historyTab">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>History</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QDateEdit" name="dateEdit">
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="historyTableView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="scheduleTab">
+       <attribute name="title">
+        <string>Schedule</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4"/>
+      </widget>
+      <widget class="QWidget" name="goalsTab">
+       <attribute name="title">
+        <string>Goals</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="progressTab">
+       <attribute name="title">
+        <string>Progress</string>
        </attribute>
       </widget>
      </widget>
@@ -56,7 +87,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>700</width>
+     <width>442</width>
      <height>21</height>
     </rect>
    </property>

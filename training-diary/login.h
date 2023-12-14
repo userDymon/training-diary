@@ -6,6 +6,7 @@
 
 #include "dbmanager.h"
 #include "signup.h"
+#include "user.h"
 
 namespace Ui {
 class Login;
@@ -36,6 +37,7 @@ private:
     Ui::Login *ui;
     DBManager* dbManager;
     SignUp *signUp;
+    User *user;
 };
 
 #endif // LOGIN_H

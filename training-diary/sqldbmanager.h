@@ -3,6 +3,8 @@
 
 
 #include <QSqlDatabase>
+#include <QString>
+#include <QDate>
 
 #include "dbmanager.h"
 #include "user.h"
@@ -18,7 +20,9 @@ public:
     void connectToDataBase() override;
     QSqlDatabase getDB() override;
     bool insertIntoTable(User &) override;
+    bool insertIntoTable(Exercise &, QString) override;
     bool selectFromTable(User &) override;
+    bool haveUser(QString &) override;
 
 private:
     QSqlDatabase db;

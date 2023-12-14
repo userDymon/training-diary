@@ -34,14 +34,18 @@ void SignUp::on_submitPB_clicked()
 {
     QString login = ui->loginLine->text();
 
-    if(ui->loginLine->text().isEmpty() || ui->createPasswordLine->text().isEmpty() || ui->confirmPasswordLine->text().isEmpty()){
+    if(login.isEmpty() || ui->createPasswordLine->text().isEmpty() || ui->confirmPasswordLine->text().isEmpty()){
         QMessageBox::critical(this, "Error", "All fields must be filled");
     }else{
         if(ui->createPasswordLine->text() == ui->confirmPasswordLine->text() ){
+            if(dbManager->haveUser(login)){
+                QMessageBox::critical(this, "Error", "This login has already been used");
+            }else{
             QByteArray hashedPassword = QCryptographicHash::hash(ui->createPasswordLine->text().toUtf8(), QCryptographicHash::Sha256);
-            User newUser(ui->loginLine->text(), hashedPassword);
+            User newUser(login, hashedPassword);
             dbManager->insertIntoTable(newUser);
             this->accept();
+            }
         }else{
             QMessageBox::critical(this, "Error", "Passwords must match");
         }

@@ -3,7 +3,9 @@
 #include "ui_mainwindow.h"
 
 #include "exercizedialog.h"
+#include "ui_exercizedialog.h"
 
+#include <QDialog>
 #include <QSqlTableModel>
 #include <QTableView>
 #include <QListWidgetItem>
@@ -68,14 +70,41 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     exercizeDialog->show();
-    exercizeDialog->exec();
+    int result = exercizeDialog->exec();
+
+    if(result == QDialog::Accepted){
+        QString name = exercizeDialog->ui->nameLineEdit->text();
+        int weight = exercizeDialog->ui->weightLineEdit->text().toInt();
+        int reps = exercizeDialog->ui->repsLineEdit->text().toInt();
+        int sets = exercizeDialog->ui->setsLineEdit->text().toInt();
+        Exercise newExercise(name, weight, sets,reps);
+        dbManager->insertIntoTable(newExercise, user->getLogin());
+        addNewItemExercise(&newExercise);
+    }
 
     historyModel->select();
 }
 
+void MainWindow::on_addExerciseSchedulePB_clicked()
+{
+    exercizeDialog->show();
+    int result = exercizeDialog->exec();
+
+    if(result == QDialog::Accepted){
+        QString name = exercizeDialog->ui->nameLineEdit->text();
+        int weight = exercizeDialog->ui->weightLineEdit->text().toInt();
+        int reps = exercizeDialog->ui->repsLineEdit->text().toInt();
+        int sets = exercizeDialog->ui->setsLineEdit->text().toInt();
+        Exercise newExercise(name, weight, sets,reps);
+        dbManager->insertIntoTable(newExercise, user->getLogin(), ui->comboBox->currentText());
+    }
+
+    scheduleModel->select();
+}
+
 void  MainWindow::addNewItemExercise(Exercise *exercise){
     QListWidgetItem* item = new QListWidgetItem();
-    item->setText(QString("name: %1, weight: %2, sets: %3, reps: %4")
+    item->setText(QString("Name: %1, Weight: %2, Sets: %3, Reps: %4")
                       .arg(exercise->getName())
                       .arg(exercise->getWeight())
                       .arg(exercise->getSets())
@@ -184,15 +213,6 @@ void MainWindow::on_dateEdit_userDateChanged(const QDate &date)
 {
     proxyModel->setFilterKeyColumn(5); // Assuming the "Date" column is at index 5
     proxyModel->setFilterFixedString(date.toString(Qt::ISODate));
-}
-
-
-void MainWindow::on_addExerciseSchedulePB_clicked()
-{
-    scheduleExerciseDialog->show();
-    scheduleExerciseDialog->exec();
-
-    scheduleModel->select();
 }
 
 

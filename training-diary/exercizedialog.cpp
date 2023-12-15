@@ -20,6 +20,7 @@ ExercizeDialog::~ExercizeDialog()
 
 void ExercizeDialog::on_addExercizePB_clicked()
 {
+    /*
     if(ui->nameLineEdit->text().isEmpty() || ui->weightLineEdit->text().isEmpty()
         || ui->repsLineEdit->text().isEmpty() || ui->setsLineEdit->text().isEmpty()){
         QMessageBox::critical(this, "Error", "All fields must be filled");
@@ -36,6 +37,21 @@ void ExercizeDialog::on_addExercizePB_clicked()
 
             Exercise * exercise = new Exercise(ui->nameLineEdit->text(), weight, sets,reps);
             emit addExercise(exercise);
+            this->accept();
+        }
+    }
+    */
+    if(ui->nameLineEdit->text().isEmpty() || ui->weightLineEdit->text().isEmpty()
+        || ui->repsLineEdit->text().isEmpty() || ui->setsLineEdit->text().isEmpty()){
+        QMessageBox::critical(this, "Error", "All fields must be filled");
+    }else{
+        bool ok;
+        ui->weightLineEdit->text().toInt(&ok);
+        ui->repsLineEdit->text().toInt(&ok);
+        ui->setsLineEdit->text().toInt(&ok);
+        if(!ok){
+            QMessageBox::critical(this, "Error", "Weight or Sets or Reps is not number");
+        }else{
             this->accept();
         }
     }

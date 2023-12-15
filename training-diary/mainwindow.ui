@@ -21,13 +21,20 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="workoutTab">
        <attribute name="title">
         <string>Workout</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Today's training session</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
@@ -126,7 +133,7 @@
          <widget class="QTableView" name="goalsTableView"/>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="addGoalPB">
           <property name="text">
            <string>add goal</string>
           </property>
@@ -138,6 +145,11 @@
        <attribute name="title">
         <string>Progress</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QListWidget" name="progresListWidget"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

@@ -3,6 +3,8 @@
 Exercise::Exercise(const QString& name, int weight, int sets, int reps)
     : name(name), weight(weight) ,sets(sets), reps(reps) {}
 
+Exercise::Exercise(const Exercise& other): name(other.getName()), weight(other.getWeight()) ,sets(other.getSets()), reps(other.getReps()) {}
+
 QString Exercise::getName() const {
     return name;
 }

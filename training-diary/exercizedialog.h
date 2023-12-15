@@ -22,9 +22,6 @@ public:
 private slots:   
     void on_addExercizePB_clicked();
 
-signals:
-    void addExercise(Exercise*);
-
 
 private:
     User *user;

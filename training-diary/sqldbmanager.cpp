@@ -112,7 +112,23 @@ bool SqlDBManager::createTables()
         qDebug() << "DataBase: error of create table exercise";
         qDebug() << query.lastError().text();
         return false;
-    } else {
+    }
+
+    if(!query.exec("\
+                    CREATE TABLE goals (\
+                        user_id INTEGER,\
+                        name VARCHAR(255) NOT NULL,\
+                        weight INTEGER NOT NULL,\
+                        sets INTEGER NOT NULL,\
+                        reps INTEGER NOT NULL,\
+                        isGoal BOOLEAN,\
+                        FOREIGN KEY (user_id) REFERENCES users(id)\
+                        )\
+    ")) {
+        qDebug() << "DataBase: error of create table exercise";
+        qDebug() << query.lastError().text();
+        return false;
+    }else {
         return true;
     }
 }
@@ -151,6 +167,30 @@ bool SqlDBManager::insertIntoTable(Exercise &exercise, QString login)
     query.bindValue(":sets", exercise.getSets());
     query.bindValue(":reps", exercise.getReps());
     query.bindValue(":date", currentDate);
+
+    if (!query.exec()) {
+        qDebug() << "error insert into table exercises";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+
+        return false;
+    } else
+        return true;
+}
+
+bool SqlDBManager::insertIntoTable(Exercise &exercise, QString login, bool isGoal)
+{
+    QSqlQuery query;
+
+    query.prepare(
+        "INSERT INTO goals (user_id, name, weight, sets, reps, isGoal)\
+        VALUES((SELECT id FROM users WHERE login = :login), :name, :weight, :sets, :reps, :isGoal)");
+    query.bindValue(":login", login);
+    query.bindValue(":name", exercise.getName());
+    query.bindValue(":weight", exercise.getWeight());
+    query.bindValue(":sets", exercise.getSets());
+    query.bindValue(":reps", exercise.getReps());
+    query.bindValue(":isGoal", isGoal);
 
     if (!query.exec()) {
         qDebug() << "error insert into table exercises";
@@ -244,6 +284,100 @@ bool SqlDBManager::haveUser(QString & login){
 
     qDebug() << "User not found.";
     return false;
+}
+
+/*
+bool SqlDBManager::haveGoalExercise(QString name, int weight, int sets, int reps) {
+    QSqlQuery query;
+
+    query.prepare("SELECT * FROM goals WHERE name = :name AND weight = :weight AND sets = sets AND reps = :reps");
+    query.bindValue(":name", name);
+    query.bindValue(":weight", weight);
+    query.bindValue(":sets", sets);
+    query.bindValue(":reps", reps);
+
+    if (!query.exec()) {
+        qDebug() << "Error selecting from the exercises table:";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return false;
+    }else {
+        return true;
+    }
+
+}
+
+bool SqlDBManager::deleteGoalExercise(QString login, QString name, int weight, int sets, int reps) {
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM goals WHERE user_id = (SELECT id FROM users WHERE login = :login) AND name = :name AND weight = :weight AND sets = :sets AND reps = :reps");
+    query.bindValue(":login", login);
+    query.bindValue(":name", name);
+    query.bindValue(":weight", weight);
+    query.bindValue(":sets", sets);
+    query.bindValue(":reps", reps);
+
+    if (!query.exec()) {
+        qDebug() << "Error deleting from the goals table:";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return false;
+    }
+
+    return true;
+}
+*/
+
+Exercise SqlDBManager::returnProgresExercise(const QString& exerciseName) {
+    Exercise defaultExercise(exerciseName, 0, 0, 0);
+    // Знайдіть останній запис за іменем вправи
+    QString findLastValueQuery = "SELECT weight, sets, reps FROM exercises "
+                                 "WHERE name = :exerciseName "
+                                 "ORDER BY date DESC "
+                                 "LIMIT 1;";
+
+    QSqlQuery findLastValue;
+    findLastValue.prepare(findLastValueQuery);
+    findLastValue.bindValue(":exerciseName", exerciseName);
+
+    if (findLastValue.exec() && findLastValue.next()) {
+        // Отримайте останнє значення
+        int lastWeight = findLastValue.value("weight").toInt();
+        int lastSets = findLastValue.value("sets").toInt();
+        int lastReps = findLastValue.value("reps").toInt();
+
+        // Знайдіть передостанній запис за іменем вправи по даті
+        QString findSecondLastValueQuery = "SELECT weight, sets, reps FROM exercises "
+                                           "WHERE name = :exerciseName "
+                                           "ORDER BY date DESC "
+                                           "LIMIT 1 OFFSET 1;";
+
+        QSqlQuery findSecondLastValue;
+        findSecondLastValue.prepare(findSecondLastValueQuery);
+        findSecondLastValue.bindValue(":exerciseName", exerciseName);
+
+        if (findSecondLastValue.exec() && findSecondLastValue.next()) {
+            // Отримайте передостаннє значення
+            int secondLastWeight = findSecondLastValue.value("weight").toInt();
+            int secondLastSets = findSecondLastValue.value("sets").toInt();
+            int secondLastReps = findSecondLastValue.value("reps").toInt();
+
+            // Збільште передостанні значення на 1 та вставте новий запис
+            int progresWeight = lastWeight - secondLastWeight;
+            int progresSets = lastSets - secondLastSets;
+            int progresReps = lastReps - secondLastReps;
+
+            Exercise resultExercise(exerciseName, progresWeight, progresSets, progresReps);
+            return resultExercise;
+
+        } else {
+            qDebug() << "Failed to find second last value:" << findSecondLastValue.lastError().text();
+        }
+    } else {
+        qDebug() << "Failed to find last value:" << findLastValue.lastError().text();
+    }
+
+    return defaultExercise;
 }
 
 

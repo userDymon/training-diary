@@ -6,6 +6,7 @@
 class Exercise {
 public:
     Exercise(const QString& name, int weight, int sets, int reps);
+    Exercise(const Exercise&);
 
     QString getName() const;
     int getWeight() const;

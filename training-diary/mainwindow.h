@@ -8,7 +8,6 @@
 #include <QSortFilterProxyModel>
 
 #include "exercizedialog.h"
-#include "scheduleexercise.h"
 #include "user.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +29,7 @@ public:
 private slots:
     void on_pushButton_clicked();
     void addNewItemExercise(Exercise *);
+    void addNewItemProgresExercise(Exercise *);
 
     void on_dateEdit_userDateChanged(const QDate &date);
 
@@ -37,23 +37,27 @@ private slots:
 
     void on_comboBox_currentTextChanged(const QString &arg1);
 
+    void on_addGoalPB_clicked();
+
 private:
     Ui::MainWindow *ui;
     ExercizeDialog * exercizeDialog;
-    ScheduleExercise * scheduleExerciseDialog;
     User *user;
     DBManager* dbManager;
 
     QSqlTableModel* historyModel;
     QSqlTableModel* scheduleModel;
+    QSqlTableModel* goalModel;
 
-    QSortFilterProxyModel* proxyModel;
+    QSortFilterProxyModel* historyProxyModel;
     QSortFilterProxyModel* dayOfWeekFilterProxyModel;
 
     void setupModelHistory(const QString& tableName, const QStringList& headers);
     void setupModelSchedule(const QString& tableName, const QStringList& headers);
+    void setupModelGoal(const QString& tableName, const QStringList& headers);
 
     void createUIforHistory();
     void createUIforSchedule();
+    void createUIforGoal();
 };
 #endif // MAINWINDOW_H

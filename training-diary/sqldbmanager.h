@@ -21,9 +21,13 @@ public:
     QSqlDatabase getDB() override;
     bool insertIntoTable(User &) override;
     bool insertIntoTable(Exercise &, QString) override;
+    bool insertIntoTable(Exercise &, QString, bool) override;
     bool insertIntoTable(Exercise &, QString, QString) override;
     bool selectFromTable(User &) override;
     bool haveUser(QString &) override;
+    //bool haveGoalExercise(QString, int, int, int) override;
+    //bool deleteGoalExercise(QString, QString, int, int, int) override;
+    Exercise returnProgresExercise(const QString& exerciseName) override;
 
 private:
     QSqlDatabase db;

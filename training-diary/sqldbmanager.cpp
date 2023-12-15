@@ -8,6 +8,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QCryptographicHash>
+#include <QMessageBox>
 
 SqlDBManager* SqlDBManager::instance = nullptr;
 
@@ -286,31 +287,58 @@ bool SqlDBManager::haveUser(QString & login){
     return false;
 }
 
-/*
-bool SqlDBManager::haveGoalExercise(QString name, int weight, int sets, int reps) {
+
+bool SqlDBManager::haveGoalExercise(QString login, QString name, int weight, int sets, int reps, bool isBigger) {
     QSqlQuery query;
 
-    query.prepare("SELECT * FROM goals WHERE name = :name AND weight = :weight AND sets = sets AND reps = :reps");
+    if (isBigger) {
+        query.prepare("SELECT * FROM goals WHERE user_id = (SELECT id FROM users WHERE login = :login) AND name = :name AND weight <= :weight AND sets <= :sets AND reps <= :reps ");
+    } else {
+        query.prepare("SELECT * FROM goals WHERE user_id = (SELECT id FROM users WHERE login = :login) AND name = :name AND weight >= :weight AND sets >= :sets AND reps >= :reps ");
+    }
+
+    query.bindValue(":login", login);
     query.bindValue(":name", name);
     query.bindValue(":weight", weight);
     query.bindValue(":sets", sets);
     query.bindValue(":reps", reps);
 
     if (!query.exec()) {
-        qDebug() << "Error selecting from the exercises table:";
+        qDebug() << "Error selecting from the goals table:";
         qDebug() << query.lastError().text();
         qDebug() << query.lastQuery();
         return false;
-    }else {
-        return true;
     }
 
+    if(!isBigger){
+        if(query.next()){
+            return true;
+        }
+        QSqlQuery query2;
+        query2.prepare("SELECT * FROM exercises WHERE user_id = (SELECT id FROM users WHERE login = :login) AND name = :name AND weight >= :weight AND sets >= :sets AND reps >= :reps ");
+        query2.bindValue(":login", login);
+        query2.bindValue(":name", name);
+        query2.bindValue(":weight", weight);
+        query2.bindValue(":sets", sets);
+        query2.bindValue(":reps", reps);
+
+        if (query2.exec() && query2.next()) {
+            return true;
+        } else {
+            qDebug() << "Record not found or error executing the query.";
+            return false;
+        }
+    }
+
+    return query.next();
+
 }
+
 
 bool SqlDBManager::deleteGoalExercise(QString login, QString name, int weight, int sets, int reps) {
     QSqlQuery query;
 
-    query.prepare("DELETE FROM goals WHERE user_id = (SELECT id FROM users WHERE login = :login) AND name = :name AND weight = :weight AND sets = :sets AND reps = :reps");
+    query.prepare("DELETE FROM goals WHERE user_id = (SELECT id FROM users WHERE login = :login) AND name = :name AND weight <= :weight AND sets <= :sets AND reps <= :reps ");
     query.bindValue(":login", login);
     query.bindValue(":name", name);
     query.bindValue(":weight", weight);
@@ -326,7 +354,6 @@ bool SqlDBManager::deleteGoalExercise(QString login, QString name, int weight, i
 
     return true;
 }
-*/
 
 Exercise SqlDBManager::returnProgresExercise(const QString& exerciseName) {
     Exercise defaultExercise(exerciseName, 0, 0, 0);

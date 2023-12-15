@@ -5,8 +5,8 @@
 
 #include <QMessageBox>
 
-ExercizeDialog::ExercizeDialog(DBManager* dbManager, User *user, QWidget *parent) :
-    QDialog(parent), user(user), dbManager(dbManager),
+ExercizeDialog::ExercizeDialog(DBManager* dbManager, User *user, bool isGoal, QWidget *parent) :
+    QDialog(parent), user(user), dbManager(dbManager), isGoal(isGoal),
     ui(new Ui::ExercizeDialog)
 {
     ui->setupUi(this);
@@ -20,39 +20,33 @@ ExercizeDialog::~ExercizeDialog()
 
 void ExercizeDialog::on_addExercizePB_clicked()
 {
-    /*
-    if(ui->nameLineEdit->text().isEmpty() || ui->weightLineEdit->text().isEmpty()
-        || ui->repsLineEdit->text().isEmpty() || ui->setsLineEdit->text().isEmpty()){
-        QMessageBox::critical(this, "Error", "All fields must be filled");
-    }else{
-        bool ok;
-        int weight = ui->weightLineEdit->text().toInt(&ok);
-        int reps = ui->repsLineEdit->text().toInt(&ok);
-        int sets = ui->setsLineEdit->text().toInt(&ok);
-        if(!ok){
-            QMessageBox::critical(this, "Error", "Sets or Reps is not number");
-        }else{
-            Exercise newExercise(ui->nameLineEdit->text(), weight, sets,reps);
-            dbManager->insertIntoTable(newExercise, user->getLogin());
+    bool ok = false;
+    QString name = ui->nameLineEdit->text();
+    int weight = ui->weightLineEdit->text().toInt(&ok);
+    int sets = ui->setsLineEdit->text().toInt(&ok);
+    int reps = ui->repsLineEdit->text().toInt(&ok);
 
-            Exercise * exercise = new Exercise(ui->nameLineEdit->text(), weight, sets,reps);
-            emit addExercise(exercise);
-            this->accept();
-        }
-    }
-    */
-    if(ui->nameLineEdit->text().isEmpty() || ui->weightLineEdit->text().isEmpty()
+    if(name.isEmpty() || ui->weightLineEdit->text().isEmpty()
         || ui->repsLineEdit->text().isEmpty() || ui->setsLineEdit->text().isEmpty()){
         QMessageBox::critical(this, "Error", "All fields must be filled");
     }else{
-        bool ok;
-        ui->weightLineEdit->text().toInt(&ok);
-        ui->repsLineEdit->text().toInt(&ok);
-        ui->setsLineEdit->text().toInt(&ok);
-        if(!ok){
-            QMessageBox::critical(this, "Error", "Weight or Sets or Reps is not number");
-        }else{
-            this->accept();
+        if(isGoal){
+            if(!ok){
+                QMessageBox::critical(this, "Error", "Weight or Sets or Reps is not number");
+            }else{
+                if(dbManager->haveGoalExercise(user->getLogin(), name, weight, sets, reps, false)){
+                    QMessageBox::warning(this, "Error", "The goal has been achieved or already set");
+                }else{
+                    this->accept();
+                }
+            }
+        }
+        else{
+            if(!ok){
+                QMessageBox::critical(this, "Error", "Weight or Sets or Reps is not number");
+            }else{
+                this->accept();
+            }
         }
     }
 }

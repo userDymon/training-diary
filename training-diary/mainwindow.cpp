@@ -59,7 +59,7 @@ MainWindow::MainWindow(DBManager* dbManager,User *user, QWidget *parent)
 
     this->createUIforGoal();
 
-    exercizeDialog = new ExercizeDialog(dbManager, user);
+    exercizeDialog = new ExercizeDialog(dbManager, user, false);
     exercizeDialog->setModal(true);
 
     // Отримати поточну дату
@@ -80,6 +80,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    exercizeDialog->deleteLater();
+    exercizeDialog = new ExercizeDialog(dbManager, user, false);
+    exercizeDialog->setModal(true);
     exercizeDialog->show();
     int result = exercizeDialog->exec();
 
@@ -92,14 +95,13 @@ void MainWindow::on_pushButton_clicked()
         dbManager->insertIntoTable(newExercise, user->getLogin());
         addNewItemExercise(&newExercise);
 
-        //if(dbManager->haveGoalExercise(newExercise.getName(), newExercise.getWeight(), newExercise.getSets(), newExercise.getReps())){
-            //dbManager->deleteGoalExercise(user->getLogin(), newExercise.getName(), newExercise.getWeight(), newExercise.getSets(), newExercise.getReps());
-        //}
+        if(dbManager->haveGoalExercise(user->getLogin(), name, weight, sets,reps, true)){
+            dbManager->deleteGoalExercise(user->getLogin(), name, weight, sets, reps);
+        }
 
         Exercise progresExercise(dbManager->returnProgresExercise(name));
-        if(progresExercise.getWeight() > 0 || progresExercise.getSets() > 0 || progresExercise.getReps() > 0){
-            addNewItemProgresExercise(&progresExercise);
-        }
+        addNewItemProgresExercise(&progresExercise);
+        goalModel->select();
     }
 
     historyModel->select();
@@ -107,6 +109,9 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_addExerciseSchedulePB_clicked()
 {
+    exercizeDialog->deleteLater();
+    exercizeDialog = new ExercizeDialog(dbManager, user, false);
+    exercizeDialog->setModal(true);
     exercizeDialog->show();
     int result = exercizeDialog->exec();
 
@@ -124,6 +129,9 @@ void MainWindow::on_addExerciseSchedulePB_clicked()
 
 void MainWindow::on_addGoalPB_clicked()
 {
+    exercizeDialog->deleteLater();
+    exercizeDialog = new ExercizeDialog(dbManager, user, true);
+    exercizeDialog->setModal(false);
     exercizeDialog->show();
     int result = exercizeDialog->exec();
 
@@ -135,8 +143,6 @@ void MainWindow::on_addGoalPB_clicked()
         Exercise newExercise(name, weight, sets,reps);
         dbManager->insertIntoTable(newExercise, user->getLogin(), true);
     }
-
-    //добати перевірку на досягнення цілі
 
     goalModel->select();
 }
@@ -154,11 +160,11 @@ void  MainWindow::addNewItemExercise(Exercise *exercise){
 
 void  MainWindow::addNewItemProgresExercise(Exercise *exercise){
     QListWidgetItem* item = new QListWidgetItem();
-    item->setText(QString("Name: %1, Weight: +%2, Sets: +%3, Reps: +%4")
+    item->setText(QString("Name: %1, Weight: %2, Sets: %3, Reps: %4")
                       .arg(exercise->getName())
-                      .arg(exercise->getWeight())
-                      .arg(exercise->getSets())
-                      .arg(exercise->getReps())
+                      .arg(exercise->getWeight() > 0 ? "+" + QString::number(exercise->getWeight()) : QString::number(exercise->getWeight()))
+                      .arg(exercise->getSets() > 0 ? "+" + QString::number(exercise->getSets()) : QString::number(exercise->getSets()))
+                      .arg(exercise->getReps() > 0 ? "+" + QString::number(exercise->getReps()) : QString::number(exercise->getReps()))
                   );
     ui->progresListWidget->addItem(item);
 }

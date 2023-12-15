@@ -15,7 +15,7 @@ class ExercizeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ExercizeDialog(DBManager* dbManager, User *user, QWidget *parent = nullptr);
+    explicit ExercizeDialog(DBManager* dbManager, User *user, bool isGoal, QWidget *parent = nullptr);
     ~ExercizeDialog();
     Ui::ExercizeDialog *ui;
 
@@ -26,6 +26,7 @@ private slots:
 private:
     User *user;
     DBManager* dbManager;
+    bool isGoal;
 };
 
 #endif // EXERCIZEDIALOG_H

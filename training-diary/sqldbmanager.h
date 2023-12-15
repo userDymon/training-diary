@@ -25,8 +25,8 @@ public:
     bool insertIntoTable(Exercise &, QString, QString) override;
     bool selectFromTable(User &) override;
     bool haveUser(QString &) override;
-    //bool haveGoalExercise(QString, int, int, int) override;
-    //bool deleteGoalExercise(QString, QString, int, int, int) override;
+    bool haveGoalExercise(QString, QString, int, int, int, bool) override;
+    bool deleteGoalExercise(QString, QString, int, int, int) override;
     Exercise returnProgresExercise(const QString& exerciseName) override;
 
 private:

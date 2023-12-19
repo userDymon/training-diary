@@ -47,7 +47,7 @@ void SignUp::on_submitPB_clicked()
             this->accept();
             }
         }else{
-            QMessageBox::critical(this, "Error", "Passwords must match");
+            QMessageBox::warning(this, "Error", "Passwords must match");
         }
     }
 }

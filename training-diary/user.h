@@ -10,6 +10,9 @@ public:
     QString getLogin() const;
     QString getPassword() const;
 
+    void setLogin(QString);
+    void setPassword(QString);
+
 private:
     QString login;
     QString password;

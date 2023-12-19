@@ -451,8 +451,6 @@ bool SqlDBManager::hasSavedCredentials() {
     }
 }
 
-
-
 User SqlDBManager::returnSavedCredentials() {
     QSqlQuery query;
     query.prepare("SELECT login, password FROM userAutolog");
@@ -462,6 +460,55 @@ User SqlDBManager::returnSavedCredentials() {
         QString savedPassword = query.value("password").toString();
         // Створюємо та повертаємо об'єкт User
         return User(savedLogin, savedPassword);
+    }
+}
+
+bool SqlDBManager::clearAutologinTable() {
+    QSqlQuery query;
+    query.prepare("DELETE FROM userAutolog");
+
+    if (query.exec()) {
+        qDebug() << "Autologin data cleared successfully.";
+        return true;
+    } else {
+        qDebug() << "Error clearing autologin data:";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return false;
+    }
+}
+
+bool SqlDBManager::updateLogin(const QString& oldLogin, const QString& newLogin) {
+    QSqlQuery query;
+    query.prepare("UPDATE users SET login = :newLogin WHERE login = :oldLogin");
+    query.bindValue(":newLogin", newLogin);
+    query.bindValue(":oldLogin", oldLogin);
+
+    if (query.exec()) {
+        qDebug() << "Login updated successfully.";
+        return true;
+    } else {
+        qDebug() << "Error updating login:";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return false;
+    }
+}
+
+bool SqlDBManager::updatePassword(const QString& login, const QString& newPassword) {
+    QSqlQuery query;
+    query.prepare("UPDATE users SET password = :newPassword WHERE login = :login");
+    query.bindValue(":newPassword", newPassword);
+    query.bindValue(":login", login);
+
+    if (query.exec()) {
+        qDebug() << "Password updated successfully.";
+        return true;
+    } else {
+        qDebug() << "Error updating password:";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return false;
     }
 }
 

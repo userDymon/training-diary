@@ -16,7 +16,6 @@ Login::Login(DBManager* dbManager, QWidget *parent)
     ui->signUp->setText("<a href='#'>Sign Up</a>");
 
     connect(ui->signUp, SIGNAL(linkActivated(const QString&)), this, SLOT(on_signUp_linkActivated()));
-    connect(this, &Login::signInSuccess, this, &Login::onSignInSuccess);
     connect(this, &Login::signInFailed, this, &Login::onSignInFailed);
 
     signUp = new SignUp(dbManager);
@@ -38,10 +37,10 @@ void Login::attemptSignIn(const QString& login, const QString& password) {
 
     // Перевірка наявності користувача в базі даних
     if (dbManager->selectFromTable(*user)) {
-        emit signInSuccess();
         if(ui->autoLogCB){
             dbManager->autoLog(*user);
         }
+        this->accept();
         MainWindow* mainWindow = new MainWindow(dbManager, user);
         mainWindow->show();
     } else {
@@ -64,10 +63,6 @@ void Login::on_signUp_linkActivated(const QString &link)
     signUp->show();
 }
 
-void Login::onSignInSuccess() {
-    QMessageBox::information(this, "Success", "Login successful");
-    this->accept();
-}
 
 void Login::onSignInFailed() {
     QMessageBox::critical(this, "Error", "Login failed. Check your credentials.");

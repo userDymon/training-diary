@@ -31,6 +31,12 @@ public:
     bool autoLog(User &) override;
     bool hasSavedCredentials() override;
     User returnSavedCredentials() override;
+    bool clearAutologinTable() override;
+    // Функція для зміни логіна в базі даних
+    bool updateLogin(const QString& oldLogin, const QString& newLogin) override;
+    // Функція для зміни паролю в базі даних
+    bool updatePassword(const QString& login, const QString& newPassword) override;
+
 
 private:
     QSqlDatabase db;

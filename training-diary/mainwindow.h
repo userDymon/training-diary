@@ -9,6 +9,8 @@
 
 #include "exercizedialog.h"
 #include "user.h"
+#include "changeusername.h"
+#include "changepassword.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,11 +41,19 @@ private slots:
 
     void on_addGoalPB_clicked();
 
+    void on_actionLog_out_triggered();
+
+    void on_actionChange_login_triggered();
+
+    void on_actionChange_password_triggered();
+
 private:
     Ui::MainWindow *ui;
     ExercizeDialog * exercizeDialog;
     User *user;
     DBManager* dbManager;
+    ChangeUsername * changeUsernameDialog;
+    ChangePassword * changePasswordDialog;
 
     QSqlTableModel* historyModel;
     QSqlTableModel* scheduleModel;

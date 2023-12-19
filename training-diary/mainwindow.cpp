@@ -18,6 +18,7 @@
 #include <QRegularExpression>
 #include <QStyledItemDelegate>
 #include <QCheckBox>
+#include <QCoreApplication>
 
 MainWindow::MainWindow(DBManager* dbManager,User *user, QWidget *parent)
     : QMainWindow(parent), user(user), dbManager(dbManager), ui(new Ui::MainWindow) {
@@ -320,4 +321,25 @@ void MainWindow::on_comboBox_currentTextChanged(const QString &dayOfWeek)
     dayOfWeekFilterProxyModel->setFilterFixedString(dayOfWeek);
 }
 
+
+
+void MainWindow::on_actionLog_out_triggered()
+{
+    dbManager->clearAutologinTable();
+    QApplication::quit();
+}
+
+
+void MainWindow::on_actionChange_login_triggered()
+{
+    changeUsernameDialog = new ChangeUsername(dbManager, user);
+    changeUsernameDialog->show();
+}
+
+
+void MainWindow::on_actionChange_password_triggered()
+{
+    changePasswordDialog = new ChangePassword(dbManager, user);
+    changePasswordDialog->show();
+}
 

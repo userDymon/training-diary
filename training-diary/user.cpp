@@ -10,3 +10,11 @@ QString User::getLogin() const {
 QString User::getPassword() const {
     return password;
 }
+
+void User::setLogin(QString login){
+    this->login = login;
+}
+
+void User::setPassword(QString password){
+    this->password = password;
+}

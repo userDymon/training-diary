@@ -31,7 +31,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Today's training session</string>
+           <string>Training session</string>
           </property>
          </widget>
         </item>
@@ -147,6 +147,13 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Session progress</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QListWidget" name="progresListWidget"/>
         </item>
        </layout>
@@ -165,7 +172,31 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuAccount">
+    <property name="title">
+     <string>Account</string>
+    </property>
+    <addaction name="actionChange_login"/>
+    <addaction name="actionChange_password"/>
+    <addaction name="actionLog_out"/>
+   </widget>
+   <addaction name="menuAccount"/>
   </widget>
+  <action name="actionChange_login">
+   <property name="text">
+    <string>Change login</string>
+   </property>
+  </action>
+  <action name="actionChange_password">
+   <property name="text">
+    <string>Change password</string>
+   </property>
+  </action>
+  <action name="actionLog_out">
+   <property name="text">
+    <string>Log out</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -21,7 +21,6 @@ public:
     ~Login();
 
 signals:
-    void signInSuccess();
     void signInFailed(const QString& error);
 
 private slots:
@@ -30,7 +29,6 @@ private slots:
 
     void on_signUp_linkActivated(const QString &link);
 
-    void onSignInSuccess();
     void onSignInFailed();
 
 private:

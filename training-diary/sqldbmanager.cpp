@@ -129,6 +129,17 @@ bool SqlDBManager::createTables()
         qDebug() << "DataBase: error of create table exercise";
         qDebug() << query.lastError().text();
         return false;
+    }
+    if (!query.exec("\
+                    CREATE TABLE userAutolog(\
+                        user_id INTEGER NOT NULL,\
+                        login VARCHAR(255) NOT NULL,\
+                        password VARCHAR(255) NOT NULL\
+                        )\
+    ")) {
+        qDebug() << "DataBase: error of create table userAutolog";
+        qDebug() << query.lastError().text();
+        return false;
     }else {
         return true;
     }
@@ -406,5 +417,53 @@ Exercise SqlDBManager::returnProgresExercise(const QString& exerciseName) {
 
     return defaultExercise;
 }
+
+bool SqlDBManager::autoLog(User &user){
+    QSqlQuery query;
+
+    query.prepare(
+        "INSERT INTO userAutolog(user_id, login, password)\
+        VALUES((SELECT id FROM users WHERE login = :login), :login, :password)");
+        query.bindValue(":login", user.getLogin());
+        query.bindValue(":password", user.getPassword());
+
+        if (!query.exec()) {
+            qDebug() << "error insert into table userAutolog";
+            qDebug() << query.lastError().text();
+            qDebug() << query.lastQuery();
+
+            return false;
+        } else
+        return true;
+}
+
+bool SqlDBManager::hasSavedCredentials() {
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM userAutolog");
+    if (query.exec() && query.next()) {
+        int rowCount = query.value(0).toInt();
+        return rowCount > 0;
+    } else {
+        qDebug() << "Error checking saved credentials:";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return false;
+    }
+}
+
+
+
+User SqlDBManager::returnSavedCredentials() {
+    QSqlQuery query;
+    query.prepare("SELECT login, password FROM userAutolog");
+
+    if (query.exec() && query.next()) {
+        QString savedLogin = query.value("login").toString();
+        QString savedPassword = query.value("password").toString();
+        // Створюємо та повертаємо об'єкт User
+        return User(savedLogin, savedPassword);
+    }
+}
+
 
 

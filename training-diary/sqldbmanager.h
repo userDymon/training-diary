@@ -28,6 +28,9 @@ public:
     bool haveGoalExercise(QString, QString, int, int, int, bool) override;
     bool deleteGoalExercise(QString, QString, int, int, int) override;
     Exercise returnProgresExercise(const QString& exerciseName) override;
+    bool autoLog(User &) override;
+    bool hasSavedCredentials() override;
+    User returnSavedCredentials() override;
 
 private:
     QSqlDatabase db;

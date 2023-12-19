@@ -69,6 +69,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="autoLogCB">
+       <property name="text">
+        <string>Keep me signed in</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="submitPB">
        <property name="text">
         <string>Submit</string>

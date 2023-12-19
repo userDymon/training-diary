@@ -68,7 +68,6 @@ MainWindow::MainWindow(DBManager* dbManager,User *user, QWidget *parent)
     // Встановити поточну дату в QDateEdit
     ui->dateEdit->setDate(currentDate);
     on_comboBox_currentTextChanged("Monday");
-
 }
 
 MainWindow::~MainWindow()

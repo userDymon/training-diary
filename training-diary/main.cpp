@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QtDebug>
+#include <QMessageBox>
 
 void customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -47,18 +48,18 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(customMessageHandler);
 
     DBManager *dbManager = SqlDBManager::getInstance();
-
     dbManager->connectToDataBase();
 
-    //Login l(dbManager);
-    //l.show();
+    MainWindow w(dbManager, new User(dbManager->returnSavedCredentials()));
 
-    ///*
-    QByteArray hashedPassword = QCryptographicHash::hash("1234", QCryptographicHash::Sha256);
-    User *user = new User("dmytro", QString(hashedPassword));
-    MainWindow w(dbManager, user);
-    w.show();
-    //*/
+    Login l(dbManager);
+
+    if (dbManager->hasSavedCredentials()) {
+        w.show();
+    } else {
+        l.show();
+    }
 
     return a.exec();
 }
+

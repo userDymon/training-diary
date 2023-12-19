@@ -21,6 +21,9 @@ public:
     virtual bool haveGoalExercise(QString, QString, int, int, int, bool) = 0;
     virtual bool deleteGoalExercise(QString, QString, int, int, int) = 0;
     virtual Exercise returnProgresExercise(const QString& exerciseName) = 0;
+    virtual bool autoLog(User &) = 0;
+    virtual bool hasSavedCredentials() = 0;
+    virtual User returnSavedCredentials() = 0;
 };
 #define DBMANAGER_H
 

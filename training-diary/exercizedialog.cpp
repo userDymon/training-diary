@@ -17,6 +17,10 @@ ExercizeDialog::~ExercizeDialog()
     delete ui;
 }
 
+Ui::ExercizeDialog * ExercizeDialog::getUi(){
+    return this->ui;
+}
+
 
 void ExercizeDialog::on_addExercizePB_clicked()
 {

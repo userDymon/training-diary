@@ -61,6 +61,9 @@ private:
 
     QSortFilterProxyModel* historyProxyModel;
     QSortFilterProxyModel* dayOfWeekFilterProxyModel;
+    QSortFilterProxyModel* userProxyModel;
+
+    Ui::ExercizeDialog *exercizeDialogUi;
 
     void setupModelHistory(const QString& tableName, const QStringList& headers);
     void setupModelSchedule(const QString& tableName, const QStringList& headers);

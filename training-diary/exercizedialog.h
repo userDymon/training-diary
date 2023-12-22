@@ -17,13 +17,14 @@ class ExercizeDialog : public QDialog
 public:
     explicit ExercizeDialog(DBManager* dbManager, User *user, bool isGoal, QWidget *parent = nullptr);
     ~ExercizeDialog();
-    Ui::ExercizeDialog *ui;
+    Ui::ExercizeDialog * getUi();
 
 private slots:   
     void on_addExercizePB_clicked();
 
 
 private:
+    Ui::ExercizeDialog *ui;
     User *user;
     DBManager* dbManager;
     bool isGoal;

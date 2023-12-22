@@ -37,7 +37,7 @@ void Login::attemptSignIn(const QString& login, const QString& password) {
 
     // Перевірка наявності користувача в базі даних
     if (dbManager->selectFromTable(*user)) {
-        if(ui->autoLogCB){
+        if(ui->autoLogCB->isChecked()){
             dbManager->autoLog(*user);
         }
         this->accept();

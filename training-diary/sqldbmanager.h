@@ -21,7 +21,7 @@ public:
     QSqlDatabase getDB() override;
     bool insertIntoTable(User &) override;
     bool insertIntoTable(Exercise &, QString) override;
-    bool insertIntoTable(Exercise &, QString, bool) override;
+    bool insertIntoGoals(Exercise &, QString) override;
     bool insertIntoTable(Exercise &, QString, QString) override;
     bool selectFromTable(User &) override;
     bool haveUser(QString &) override;
@@ -31,6 +31,7 @@ public:
     bool autoLog(User &) override;
     bool hasSavedCredentials() override;
     User returnSavedCredentials() override;
+    int returnId(User *user) override;
     bool clearAutologinTable() override;
     // Функція для зміни логіна в базі даних
     bool updateLogin(const QString& oldLogin, const QString& newLogin) override;
@@ -49,6 +50,11 @@ private:
     bool restoreDataBase();
     void closeDataBase();
     bool createTables();
+    bool createTableUsers();
+    bool createTableExercise();
+    bool createTableScheduleExercises();
+    bool createTableGoal();
+    bool createTableAutolog();
 };
 
 #endif // SQLDBMANAGER_H

@@ -1,4 +1,4 @@
-#include "sqldbmanager.h"
+    #include "sqldbmanager.h"
 
 #include <QDate>
 #include <QDateTime>
@@ -70,7 +70,28 @@ bool SqlDBManager::createTables()
 {
     QSqlQuery query;
 
-    if (!query.exec("\
+    if(!createTableUsers())
+        return false;
+
+    if(!createTableExercise())
+        return false;
+
+    if(!createTableScheduleExercises())
+        return false;
+
+    if(!createTableGoal())
+        return false;
+
+    if(!createTableAutolog())
+        return false;
+
+    return true;
+}
+
+bool SqlDBManager::createTableUsers(){
+    QSqlQuery query;
+
+    if (query.exec("\
                     CREATE TABLE users(\
                         id INTEGER PRIMARY KEY AUTOINCREMENT,\
                         login VARCHAR(255) NOT NULL,\
@@ -78,12 +99,17 @@ bool SqlDBManager::createTables()
                         UNIQUE(login)\
                         )\
     ")) {
-        qDebug() << "DataBase: error of create table users";
-        qDebug() << query.lastError().text();
-        return false;
+        return true;
     }
+    qDebug() << "DataBase: error of create table users";
+    qDebug() << query.lastError().text();
+    return false;
+}
 
-    if(!query.exec("\
+bool SqlDBManager::createTableExercise(){
+    QSqlQuery query;
+
+    if(query.exec("\
                     CREATE TABLE exercises (\
                         user_id INTEGER,\
                         name VARCHAR(255) NOT NULL,\
@@ -94,12 +120,17 @@ bool SqlDBManager::createTables()
                         FOREIGN KEY (user_id) REFERENCES users(id)\
                         )\
     ")) {
-        qDebug() << "DataBase: error of create table exercise";
-        qDebug() << query.lastError().text();
-        return false;
+        return true;
     }
+    qDebug() << "DataBase: error of create table exercise";
+    qDebug() << query.lastError().text();
+    return false;
+}
 
-    if(!query.exec("\
+bool SqlDBManager::createTableScheduleExercises(){
+    QSqlQuery query;
+
+    if(query.exec("\
                     CREATE TABLE scheduleExercises (\
                         user_id INTEGER,\
                         name VARCHAR(255) NOT NULL,\
@@ -110,39 +141,48 @@ bool SqlDBManager::createTables()
                         FOREIGN KEY (user_id) REFERENCES users(id)\
                         )\
     ")) {
-        qDebug() << "DataBase: error of create table exercise";
-        qDebug() << query.lastError().text();
-        return false;
+        return true;
     }
+    qDebug() << "DataBase: error of create table scheduleExercises";
+    qDebug() << query.lastError().text();
+    return false;
+}
 
-    if(!query.exec("\
+bool SqlDBManager::createTableGoal(){
+    QSqlQuery query;
+
+    if(query.exec("\
                     CREATE TABLE goals (\
                         user_id INTEGER,\
                         name VARCHAR(255) NOT NULL,\
                         weight INTEGER NOT NULL,\
                         sets INTEGER NOT NULL,\
                         reps INTEGER NOT NULL,\
-                        isGoal BOOLEAN,\
                         FOREIGN KEY (user_id) REFERENCES users(id)\
                         )\
     ")) {
-        qDebug() << "DataBase: error of create table exercise";
-        qDebug() << query.lastError().text();
-        return false;
+        return true;
     }
-    if (!query.exec("\
+    qDebug() << "DataBase: error of create table goals";
+    qDebug() << query.lastError().text();
+    return false;
+}
+
+bool SqlDBManager::createTableAutolog(){
+    QSqlQuery query;
+
+    if (query.exec("\
                     CREATE TABLE userAutolog(\
                         user_id INTEGER NOT NULL,\
                         login VARCHAR(255) NOT NULL,\
                         password VARCHAR(255) NOT NULL\
                         )\
     ")) {
-        qDebug() << "DataBase: error of create table userAutolog";
-        qDebug() << query.lastError().text();
-        return false;
-    }else {
         return true;
     }
+    qDebug() << "DataBase: error of create table userAutolog";
+    qDebug() << query.lastError().text();
+    return false;
 }
 
 bool SqlDBManager::insertIntoTable(User &user)
@@ -190,19 +230,18 @@ bool SqlDBManager::insertIntoTable(Exercise &exercise, QString login)
         return true;
 }
 
-bool SqlDBManager::insertIntoTable(Exercise &exercise, QString login, bool isGoal)
+bool SqlDBManager::insertIntoGoals(Exercise &exercise, QString login)
 {
     QSqlQuery query;
 
     query.prepare(
-        "INSERT INTO goals (user_id, name, weight, sets, reps, isGoal)\
-        VALUES((SELECT id FROM users WHERE login = :login), :name, :weight, :sets, :reps, :isGoal)");
+        "INSERT INTO goals (user_id, name, weight, sets, reps)\
+        VALUES((SELECT id FROM users WHERE login = :login), :name, :weight, :sets, :reps)");
     query.bindValue(":login", login);
     query.bindValue(":name", exercise.getName());
     query.bindValue(":weight", exercise.getWeight());
     query.bindValue(":sets", exercise.getSets());
     query.bindValue(":reps", exercise.getReps());
-    query.bindValue(":isGoal", isGoal);
 
     if (!query.exec()) {
         qDebug() << "error insert into table exercises";
@@ -461,6 +500,32 @@ User SqlDBManager::returnSavedCredentials() {
         // Створюємо та повертаємо об'єкт User
         return User(savedLogin, savedPassword);
     }
+    return(User("0","0"));
+}
+
+int SqlDBManager::returnId(User* user){
+    QSqlQuery query;
+
+    query.prepare("SELECT id FROM users WHERE login = :login");
+    query.bindValue(":login", user->getLogin());
+    if (query.exec() && query.next()) {
+
+        // Перевірка, чи результат не порожній
+        int rowCount = query.value(0).toInt();
+        if(rowCount > 0){
+            return query.value("id").toInt();
+        }else{
+            return 0;
+        }
+    }else {
+        qDebug() << "Error checking id";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return 0;
+    }
+
+    qDebug() << "User not found.";
+    return 0;
 }
 
 bool SqlDBManager::clearAutologinTable() {

@@ -69,6 +69,7 @@ MainWindow::MainWindow(DBManager* dbManager,User *user, QWidget *parent)
     // Встановити поточну дату в QDateEdit
     ui->dateEdit->setDate(currentDate);
     on_comboBox_currentTextChanged("Monday");
+
 }
 
 MainWindow::~MainWindow()
@@ -84,13 +85,14 @@ void MainWindow::on_pushButton_clicked()
     exercizeDialog = new ExercizeDialog(dbManager, user, false);
     exercizeDialog->setModal(true);
     exercizeDialog->show();
+    exercizeDialogUi =  exercizeDialog->getUi();
     int result = exercizeDialog->exec();
 
     if(result == QDialog::Accepted){
-        QString name = exercizeDialog->ui->nameLineEdit->text();
-        int weight = exercizeDialog->ui->weightLineEdit->text().toInt();
-        int reps = exercizeDialog->ui->repsLineEdit->text().toInt();
-        int sets = exercizeDialog->ui->setsLineEdit->text().toInt();
+        QString name = exercizeDialogUi->nameLineEdit->text();
+        int weight = exercizeDialogUi->weightLineEdit->text().toInt();
+        int reps = exercizeDialogUi->repsLineEdit->text().toInt();
+        int sets = exercizeDialogUi->setsLineEdit->text().toInt();
         Exercise newExercise(name, weight, sets,reps);
         dbManager->insertIntoTable(newExercise, user->getLogin());
         addNewItemExercise(&newExercise);
@@ -113,13 +115,14 @@ void MainWindow::on_addExerciseSchedulePB_clicked()
     exercizeDialog = new ExercizeDialog(dbManager, user, false);
     exercizeDialog->setModal(true);
     exercizeDialog->show();
+    exercizeDialogUi =  exercizeDialog->getUi();
     int result = exercizeDialog->exec();
 
     if(result == QDialog::Accepted){
-        QString name = exercizeDialog->ui->nameLineEdit->text();
-        int weight = exercizeDialog->ui->weightLineEdit->text().toInt();
-        int reps = exercizeDialog->ui->repsLineEdit->text().toInt();
-        int sets = exercizeDialog->ui->setsLineEdit->text().toInt();
+        QString name = exercizeDialogUi->nameLineEdit->text();
+        int weight = exercizeDialogUi->weightLineEdit->text().toInt();
+        int reps = exercizeDialogUi->repsLineEdit->text().toInt();
+        int sets = exercizeDialogUi->setsLineEdit->text().toInt();
         Exercise newExercise(name, weight, sets,reps);
         dbManager->insertIntoTable(newExercise, user->getLogin(), ui->comboBox->currentText());
     }
@@ -133,15 +136,16 @@ void MainWindow::on_addGoalPB_clicked()
     exercizeDialog = new ExercizeDialog(dbManager, user, true);
     exercizeDialog->setModal(false);
     exercizeDialog->show();
+    exercizeDialogUi =  exercizeDialog->getUi();
     int result = exercizeDialog->exec();
 
     if(result == QDialog::Accepted){
-        QString name = exercizeDialog->ui->nameLineEdit->text();
-        int weight = exercizeDialog->ui->weightLineEdit->text().toInt();
-        int reps = exercizeDialog->ui->repsLineEdit->text().toInt();
-        int sets = exercizeDialog->ui->setsLineEdit->text().toInt();
+        QString name = exercizeDialogUi->nameLineEdit->text();
+        int weight = exercizeDialogUi->weightLineEdit->text().toInt();
+        int reps = exercizeDialogUi->repsLineEdit->text().toInt();
+        int sets = exercizeDialogUi->setsLineEdit->text().toInt();
         Exercise newExercise(name, weight, sets,reps);
-        dbManager->insertIntoTable(newExercise, user->getLogin(), true);
+        dbManager->insertIntoGoals(newExercise, user->getLogin());
     }
 
     goalModel->select();
@@ -205,16 +209,20 @@ void MainWindow::createUIforHistory() {
     // Ensure that the model is defined before using it
     if (historyModel) {
 
+        userProxyModel = new QSortFilterProxyModel(this);
+        userProxyModel->setFilterKeyColumn(0);
+        userProxyModel->setFilterFixedString(QString::number(dbManager->returnId(user)));
+
         historyProxyModel = new QSortFilterProxyModel(this);
         historyProxyModel->setSourceModel(historyModel);
 
+        userProxyModel->setSourceModel(historyProxyModel);
         // Set the model for the tableView
-        ui->historyTableView->setModel(historyProxyModel);
+        ui->historyTableView->setModel(userProxyModel);
 
         // Hide the column with ID (if it exists)
         ui->historyTableView->setColumnHidden(0, true);
         ui->historyTableView->setColumnHidden(5, true);
-        ui->historyTableView->setColumnHidden(6, true);
 
         // Set selection behavior to select entire rows
         ui->historyTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -231,6 +239,12 @@ void MainWindow::createUIforHistory() {
         // Stretch columns in the horizontal header
         ui->historyTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+        // Turn off row numbering
+        ui->historyTableView->verticalHeader()->setVisible(false);
+
+        // Hide the grid
+        //ui->historyTableView->setShowGrid(false);
+
         historyModel->select();
     } else {
         // If the model is not defined, print a message to the console
@@ -241,12 +255,16 @@ void MainWindow::createUIforHistory() {
 void MainWindow::createUIforSchedule() {
     // Ensure that the model is defined before using it
     if (scheduleModel) {
+        userProxyModel = new QSortFilterProxyModel(this);
+        userProxyModel->setFilterKeyColumn(0);
+        userProxyModel->setFilterFixedString(QString::number(dbManager->returnId(user)));
 
         dayOfWeekFilterProxyModel = new QSortFilterProxyModel(this);
         dayOfWeekFilterProxyModel->setSourceModel(scheduleModel);
 
+        userProxyModel->setSourceModel(dayOfWeekFilterProxyModel);
         // Set the model for the tableView
-        ui->scheduleTableView->setModel(dayOfWeekFilterProxyModel);
+        ui->scheduleTableView->setModel(userProxyModel);
 
         // Hide the column with ID (if it exists)
         ui->scheduleTableView->setColumnHidden(0, true);
@@ -268,6 +286,8 @@ void MainWindow::createUIforSchedule() {
         // Stretch columns in the horizontal header
         ui->scheduleTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+        ui->scheduleTableView->verticalHeader()->setVisible(false);
+
         scheduleModel->select();
     } else {
         // If the model is not defined, print a message to the console
@@ -278,8 +298,13 @@ void MainWindow::createUIforSchedule() {
 void MainWindow::createUIforGoal() {
     // Ensure that the model is defined before using it
     if (goalModel) {
-        // Set the model for the tableView
-        ui->goalsTableView->setModel(goalModel);
+        userProxyModel = new QSortFilterProxyModel(this);
+        userProxyModel->setFilterKeyColumn(0);
+        userProxyModel->setFilterFixedString(QString::number(dbManager->returnId(user)));
+
+        userProxyModel->setSourceModel(goalModel);
+
+        ui->goalsTableView->setModel(userProxyModel);
 
         // Hide the column with ID (if it exists)
         ui->goalsTableView->setColumnHidden(0, true);
@@ -299,6 +324,8 @@ void MainWindow::createUIforGoal() {
 
         // Stretch columns in the horizontal header
         ui->goalsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+        ui->goalsTableView->verticalHeader()->setVisible(false);
 
         goalModel->select();
     } else {

@@ -6,12 +6,41 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
-    <height>268</height>
+    <width>220</width>
+    <height>185</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+  border: none; 
+    background-color: PowderBlue; 
+}
+
+QLabel {
+    color: #333; /* Set label text color */
+    font-weight: bold; /* Make label text bold */
+    margin-bottom: 5px; /* Add some bottom margin for spacing */
+}
+
+QLineEdit {
+    border: 1px solid #555; /* Set border color and width */
+    border-radius: 3px; /* Optional: Add border-radius for rounded corners */
+    padding: 2px; /* Optional: Add padding for better appearance */
+    background: transparent; /* Remove background */
+    color: #444; /* Set text color */
+}
+
+
+QPushButton {
+    background-color: #000000; /* чорний фон для кнопки */
+    color: #FFFFFF; /* білий колір тексту на кнопці */
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+}</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>

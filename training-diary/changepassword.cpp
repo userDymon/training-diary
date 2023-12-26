@@ -11,7 +11,7 @@ ChangePassword::ChangePassword(DBManager* dbManager, User *user, QWidget *parent
     ui(new Ui::ChangePassword)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Change password");
+    this->setWindowIcon(QIcon("C:/Users/dimag/OneDrive/Документи/ТНТУ/КН/323/Курсова робота/training-diary/img/password.ico"));
     ui->oldPasswordLE->setEchoMode(QLineEdit::Password);
     ui->newPasswordLE->setEchoMode(QLineEdit::Password);
     ui->newPasswordConfirmLE->setEchoMode(QLineEdit::Password);

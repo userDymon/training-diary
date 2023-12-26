@@ -12,7 +12,7 @@ SignUp::SignUp(DBManager* dbManager, QWidget *parent) :
     ui(new Ui::SignUp)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Training diary");
+    this->setWindowIcon(QIcon("C:/Users/dimag/OneDrive/Документи/ТНТУ/КН/323/Курсова робота/training-diary/img/account.ico"));
     ui->createPasswordLine->setEchoMode(QLineEdit::Password);
     ui->confirmPasswordLine->setEchoMode(QLineEdit::Password);
     ui->signIn->setText("<a href='#'>Sign In</a>");

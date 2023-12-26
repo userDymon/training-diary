@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    aboutprogram.cpp \
     changepassword.cpp \
     changeusername.cpp \
     exercise.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
     user.cpp
 
 HEADERS += \
+    aboutprogram.h \
     changepassword.h \
     changeusername.h \
     dbmanager.h \
@@ -33,6 +35,7 @@ HEADERS += \
     user.h
 
 FORMS += \
+    aboutprogram.ui \
     changepassword.ui \
     changeusername.ui \
     exercizedialog.ui \

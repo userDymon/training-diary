@@ -11,7 +11,31 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Change login</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+	border: none; 
+    background-color: PowderBlue; 
+}
+QLineEdit {
+    background: transparent; /* робимо фон прозорим */
+    border: none; /* видаляємо всі рамки */
+    border-bottom: 1px solid #000000; /* тільки нижня лінія, чорна */
+    padding: 5px;
+    color: #000000; /* чорний колір тексту */
+}
+
+QPushButton {
+    background-color: #000000; /* чорний фон для кнопки */
+    color: #FFFFFF; /* білий колір тексту на кнопці */
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+}
+
+
+</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

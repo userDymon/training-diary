@@ -10,7 +10,7 @@ ChangeUsername::ChangeUsername(DBManager* dbManager, User *user, QWidget *parent
     ui(new Ui::changeUsername)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Change login");
+    this->setWindowIcon(QIcon("C:/Users/dimag/OneDrive/Документи/ТНТУ/КН/323/Курсова робота/training-diary/img/account.ico"));
 }
 
 ChangeUsername::~ChangeUsername()

@@ -4,6 +4,7 @@
 
 #include "exercizedialog.h"
 #include "ui_exercizedialog.h"
+#include "ui_AboutProgram.h"
 
 #include <QDialog>
 #include <QSqlTableModel>
@@ -19,12 +20,15 @@
 #include <QStyledItemDelegate>
 #include <QCheckBox>
 #include <QCoreApplication>
+#include <QFile>
+#include <QtUiTools/QUiLoader>
 
 MainWindow::MainWindow(DBManager* dbManager,User *user, QWidget *parent)
     : QMainWindow(parent), user(user), dbManager(dbManager), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    this->setWindowTitle("Training diary");
+    this->setWindowIcon(QIcon("C:/Users/dimag/OneDrive/Документи/ТНТУ/КН/323/Курсова робота/training-diary/img/training-diary.ico"));
 
+    aboutProgram = new AboutProgram();
 
     this->setupModelHistory("exercises",
                      QStringList()<< tr("id")
@@ -237,7 +241,8 @@ void MainWindow::createUIforHistory() {
         //tableView->setEditTriggers(QAbstractItemView::DoubleClicked);
 
         // Stretch columns in the horizontal header
-        ui->historyTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        //ui->historyTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->historyTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
         // Turn off row numbering
         ui->historyTableView->verticalHeader()->setVisible(false);
@@ -284,7 +289,8 @@ void MainWindow::createUIforSchedule() {
         //tableView->setEditTriggers(QAbstractItemView::DoubleClicked);
 
         // Stretch columns in the horizontal header
-        ui->scheduleTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        //ui->scheduleTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->scheduleTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
         ui->scheduleTableView->verticalHeader()->setVisible(false);
 
@@ -323,7 +329,8 @@ void MainWindow::createUIforGoal() {
         //tableView->setEditTriggers(QAbstractItemView::DoubleClicked);
 
         // Stretch columns in the horizontal header
-        ui->goalsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        //ui->goalsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->goalsTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
         ui->goalsTableView->verticalHeader()->setVisible(false);
 
@@ -368,5 +375,11 @@ void MainWindow::on_actionChange_password_triggered()
 {
     changePasswordDialog = new ChangePassword(dbManager, user);
     changePasswordDialog->show();
+}
+
+
+void MainWindow::on_actionAbout_program_triggered()
+{
+    aboutProgram->show();
 }
 

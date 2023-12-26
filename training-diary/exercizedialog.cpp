@@ -10,6 +10,7 @@ ExercizeDialog::ExercizeDialog(DBManager* dbManager, User *user, bool isGoal, QW
     ui(new Ui::ExercizeDialog)
 {
     ui->setupUi(this);
+    this->setWindowIcon(QIcon("C:/Users/dimag/OneDrive/Документи/ТНТУ/КН/323/Курсова робота/training-diary/img/exercise.ico"));
 }
 
 ExercizeDialog::~ExercizeDialog()

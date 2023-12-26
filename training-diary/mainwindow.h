@@ -6,11 +6,13 @@
 #include <QTableView>
 #include <QVector>
 #include <QSortFilterProxyModel>
+#include <QtUiTools/QUiLoader>
 
 #include "exercizedialog.h"
 #include "user.h"
 #include "changeusername.h"
 #include "changepassword.h"
+#include "aboutprogram.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -47,6 +49,8 @@ private slots:
 
     void on_actionChange_password_triggered();
 
+    void on_actionAbout_program_triggered();
+
 private:
     Ui::MainWindow *ui;
     ExercizeDialog * exercizeDialog;
@@ -54,6 +58,7 @@ private:
     DBManager* dbManager;
     ChangeUsername * changeUsernameDialog;
     ChangePassword * changePasswordDialog;
+    AboutProgram * aboutProgram;
 
     QSqlTableModel* historyModel;
     QSqlTableModel* scheduleModel;

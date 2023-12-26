@@ -6,22 +6,117 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>602</width>
+    <width>365</width>
     <height>519</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Training diary</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    border: none;
+    background-color: PowderBlue; 
+}
+
+QLabel {
+    color: white;
+  	background-color: black; 
+    font-size: 14px;
+  	padding: 5px 10px;
+}
+
+QPushButton {
+    background-color: #000000;
+    color: #FFFFFF;
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+}
+
+QHeaderView::section {
+    background-color: #000000; /* Black background for header section */
+    color: #FFFFFF; /* White text color for header section */
+    padding: 5px; /* Adjust padding for better readability */
+    font-size: 14px; /* Set font size for header text */
+}
+
+QListWidget {
+    border: 1px solid #000000;
+    background-color: transparent;
+}
+
+QMenuBar {
+    background-color: PowderBlue;
+    color: #000000;
+}
+
+QMenuBar::item {
+    background-color: PowderBlue;
+}
+
+QMenuBar::item:selected {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+QComboBox {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000000;
+    padding: 5px;
+    color: #000000;
+}
+
+QTabBar::tab {
+    background: PowderBlue;
+    color: #000000;
+    border: 1px solid #000000;
+    padding: 2px 5px;
+    min-height: 70px; /* Set a minimum width for the tabs */
+}
+
+QTabBar::tab:selected {
+    background: #000000;
+    color: #FFFFFF;
+}
+
+QDateEdit {
+    border: none; /* Remove borders */
+    border-bottom: 1px solid #000000; /* Add bottom border */
+    padding: 5px; /* Adjust padding for better appearance */
+    color: #000000; /* Set text color to black */
+    font-size: 14px; /* Set font size for the text */
+}
+
+QTableView {
+    border: 1px solid #000000;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="tabPosition">
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
        <number>0</number>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
       </property>
       <widget class="QWidget" name="workoutTab">
        <attribute name="title">
@@ -117,6 +212,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="addExerciseSchedulePB">
+          <property name="locale">
+           <locale language="English" country="World"/>
+          </property>
           <property name="text">
            <string>add exercise</string>
           </property>
@@ -129,6 +227,13 @@
         <string>Goals</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="goalLabel">
+          <property name="text">
+           <string>Goals not achieved</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QTableView" name="goalsTableView"/>
         </item>
@@ -168,7 +273,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>602</width>
+     <width>365</width>
      <height>21</height>
     </rect>
    </property>
@@ -180,7 +285,14 @@
     <addaction name="actionChange_password"/>
     <addaction name="actionLog_out"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_program"/>
+   </widget>
    <addaction name="menuAccount"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionChange_login">
    <property name="text">
@@ -195,6 +307,11 @@
   <action name="actionLog_out">
    <property name="text">
     <string>Log out</string>
+   </property>
+  </action>
+  <action name="actionAbout_program">
+   <property name="text">
+    <string>About program</string>
    </property>
   </action>
  </widget>

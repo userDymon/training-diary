@@ -11,7 +11,7 @@ Login::Login(DBManager* dbManager, QWidget *parent)
     : QDialog(parent), dbManager(dbManager),  ui(new Ui::Login)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Training diary");
+    this->setWindowIcon(QIcon("C:/Users/dimag/OneDrive/Документи/ТНТУ/КН/323/Курсова робота/training-diary/img/account.ico"));
     ui->passwordLine->setEchoMode(QLineEdit::Password);
     ui->signUp->setText("<a href='#'>Sign Up</a>");
 

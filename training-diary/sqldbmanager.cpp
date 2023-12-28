@@ -384,6 +384,21 @@ bool SqlDBManager::haveGoalExercise(QString login, QString name, int weight, int
 
 }
 
+bool SqlDBManager::deleteExercise(QString login, QDate currentDay) {
+    QString currentDate = currentDay.toString("yyyy-MM-dd");
+    QSqlQuery query;
+    query.prepare("DELETE FROM exercises WHERE user_id = (SELECT id FROM users WHERE login = :login) AND date = :currentDate");
+    query.bindValue(":login", login);
+    query.bindValue(":currentDate", currentDate);
+
+    if (query.exec()) {
+        return true;
+    } else {
+        qDebug() << "Error deleting exercises:" << query.lastError().text();
+        return false;
+    }
+}
+
 
 bool SqlDBManager::deleteGoalExercise(QString login, QString name, int weight, int sets, int reps) {
     QSqlQuery query;
@@ -394,6 +409,22 @@ bool SqlDBManager::deleteGoalExercise(QString login, QString name, int weight, i
     query.bindValue(":weight", weight);
     query.bindValue(":sets", sets);
     query.bindValue(":reps", reps);
+
+    if (!query.exec()) {
+        qDebug() << "Error deleting from the goals table:";
+        qDebug() << query.lastError().text();
+        qDebug() << query.lastQuery();
+        return false;
+    }
+
+    return true;
+}
+
+bool SqlDBManager::deleteGoalExercise(QString login) {
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM goals WHERE user_id = (SELECT id FROM users WHERE login = :login)");
+    query.bindValue(":login", login);
 
     if (!query.exec()) {
         qDebug() << "Error deleting from the goals table:";
@@ -577,5 +608,17 @@ bool SqlDBManager::updatePassword(const QString& login, const QString& newPasswo
     }
 }
 
+bool SqlDBManager::deleteScheduleExercise(QString login, QString dayOfWeek) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM scheduleExercises WHERE user_id = (SELECT id FROM users WHERE login = :login) AND dayOfWeek = :dayOfWeek");
+    query.bindValue(":login", login);
+    query.bindValue(":dayOfWeek", dayOfWeek);
 
+    if (query.exec()) {
+        return true;
+    } else {
+        qDebug() << "Error deleting schedule exercise:" << query.lastError().text();
+        return false;
+    }
+}
 

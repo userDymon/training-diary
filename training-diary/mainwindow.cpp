@@ -74,6 +74,11 @@ MainWindow::MainWindow(DBManager* dbManager,User *user, QWidget *parent)
     ui->dateEdit->setDate(currentDate);
     on_comboBox_currentTextChanged("Monday");
 
+    changeUsernameDialog = new ChangeUsername(dbManager, user);
+    changeUsernameDialog->setModal(true);
+
+    changePasswordDialog = new ChangePassword(dbManager, user);
+    changePasswordDialog->setModal(true);
 }
 
 MainWindow::~MainWindow()
@@ -103,6 +108,7 @@ void MainWindow::on_pushButton_clicked()
 
         if(dbManager->haveGoalExercise(user->getLogin(), name, weight, sets,reps, true)){
             dbManager->deleteGoalExercise(user->getLogin(), name, weight, sets, reps);
+            QMessageBox::information(this, "Successful", "The goal was achieved");
         }
 
         Exercise progresExercise(dbManager->returnProgresExercise(name));
@@ -110,6 +116,19 @@ void MainWindow::on_pushButton_clicked()
         goalModel->select();
     }
 
+    historyModel->select();
+}
+
+void MainWindow::on_deleteExercisePB_clicked()
+{
+    QDate currentDate = QDate::currentDate();
+    if(dbManager->deleteExercise(user->getLogin(), currentDate)){
+        QMessageBox::information(this, "Successful", "Exercise removed");
+        ui->listWidget->clear();
+        ui->progresListWidget->clear();
+    }else{
+        QMessageBox::information(this, "Error", "The exercise has not been deleted");
+    }
     historyModel->select();
 }
 
@@ -134,6 +153,17 @@ void MainWindow::on_addExerciseSchedulePB_clicked()
     scheduleModel->select();
 }
 
+void MainWindow::on_deleteExerciseSchedulePB_clicked()
+{
+    QString dayOfWeek = ui->comboBox->currentText();
+    if(dbManager->deleteScheduleExercise(user->getLogin(), dayOfWeek)){
+        QMessageBox::information(this, "Successful", "Exercise removed");
+    }else{
+        QMessageBox::information(this, "Error", "The exercise has not been deleted");
+    }
+    scheduleModel->select();
+}
+
 void MainWindow::on_addGoalPB_clicked()
 {
     exercizeDialog->deleteLater();
@@ -152,6 +182,16 @@ void MainWindow::on_addGoalPB_clicked()
         dbManager->insertIntoGoals(newExercise, user->getLogin());
     }
 
+    goalModel->select();
+}
+
+void MainWindow::on_clearGoalPB_clicked()
+{
+    if(dbManager->deleteGoalExercise(user->getLogin())){
+        QMessageBox::information(this, "Successful", "Exercises removed");
+    }else{
+        QMessageBox::information(this, "Error", "The exercises has not been deleted");
+    }
     goalModel->select();
 }
 
@@ -184,8 +224,6 @@ void MainWindow::setupModelHistory(const QString& tableName, const QStringList& 
     for (int i = 0, j = 0; i < historyModel->columnCount(); i++, j++) {
         historyModel->setHeaderData(i, Qt::Horizontal, headers[j]);
     }
-    //model->setSort(0, Qt::AscendingOrder);
-
 }
 
 void MainWindow::setupModelSchedule(const QString& tableName, const QStringList& headers) {
@@ -194,8 +232,6 @@ void MainWindow::setupModelSchedule(const QString& tableName, const QStringList&
     for (int i = 0, j = 0; i < scheduleModel->columnCount(); i++, j++) {
         scheduleModel->setHeaderData(i, Qt::Horizontal, headers[j]);
     }
-    //model->setSort(0, Qt::AscendingOrder);
-
 }
 
 void MainWindow::setupModelGoal(const QString& tableName, const QStringList& headers) {
@@ -204,13 +240,10 @@ void MainWindow::setupModelGoal(const QString& tableName, const QStringList& hea
     for (int i = 0, j = 0; i < goalModel->columnCount(); i++, j++) {
         goalModel->setHeaderData(i, Qt::Horizontal, headers[j]);
     }
-    //model->setSort(0, Qt::AscendingOrder);
-
 }
 
 
 void MainWindow::createUIforHistory() {
-    // Ensure that the model is defined before using it
     if (historyModel) {
 
         userProxyModel = new QSortFilterProxyModel(this);
@@ -221,44 +254,29 @@ void MainWindow::createUIforHistory() {
         historyProxyModel->setSourceModel(historyModel);
 
         userProxyModel->setSourceModel(historyProxyModel);
-        // Set the model for the tableView
+
         ui->historyTableView->setModel(userProxyModel);
 
-        // Hide the column with ID (if it exists)
         ui->historyTableView->setColumnHidden(0, true);
         ui->historyTableView->setColumnHidden(5, true);
 
-        // Set selection behavior to select entire rows
         ui->historyTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-        // Set selection mode to allow only single selection
         ui->historyTableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
-        // Automatically resize column widths
         ui->historyTableView->resizeColumnsToContents();
 
-        // Make columns editable on double-click
-        //tableView->setEditTriggers(QAbstractItemView::DoubleClicked);
-
-        // Stretch columns in the horizontal header
-        //ui->historyTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->historyTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
-        // Turn off row numbering
         ui->historyTableView->verticalHeader()->setVisible(false);
-
-        // Hide the grid
-        //ui->historyTableView->setShowGrid(false);
 
         historyModel->select();
     } else {
-        // If the model is not defined, print a message to the console
         qDebug() << "Model is not defined.";
     }
 }
 
 void MainWindow::createUIforSchedule() {
-    // Ensure that the model is defined before using it
     if (scheduleModel) {
         userProxyModel = new QSortFilterProxyModel(this);
         userProxyModel->setFilterKeyColumn(0);
@@ -268,41 +286,33 @@ void MainWindow::createUIforSchedule() {
         dayOfWeekFilterProxyModel->setSourceModel(scheduleModel);
 
         userProxyModel->setSourceModel(dayOfWeekFilterProxyModel);
-        // Set the model for the tableView
+
         ui->scheduleTableView->setModel(userProxyModel);
 
-        // Hide the column with ID (if it exists)
-        ui->scheduleTableView->setColumnHidden(0, true);
 
+        ui->scheduleTableView->setColumnHidden(0, true);
         ui->scheduleTableView->setColumnHidden(5, true);
 
-        // Set selection behavior to select entire rows
+
         ui->scheduleTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-        // Set selection mode to allow only single selection
+
         ui->scheduleTableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
-        // Automatically resize column widths
+
         ui->scheduleTableView->resizeColumnsToContents();
 
-        // Make columns editable on double-click
-        //tableView->setEditTriggers(QAbstractItemView::DoubleClicked);
-
-        // Stretch columns in the horizontal header
-        //ui->scheduleTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->scheduleTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
         ui->scheduleTableView->verticalHeader()->setVisible(false);
 
         scheduleModel->select();
     } else {
-        // If the model is not defined, print a message to the console
         qDebug() << "Model is not defined.";
     }
 }
 
 void MainWindow::createUIforGoal() {
-    // Ensure that the model is defined before using it
     if (goalModel) {
         userProxyModel = new QSortFilterProxyModel(this);
         userProxyModel->setFilterKeyColumn(0);
@@ -312,31 +322,25 @@ void MainWindow::createUIforGoal() {
 
         ui->goalsTableView->setModel(userProxyModel);
 
-        // Hide the column with ID (if it exists)
+
         ui->goalsTableView->setColumnHidden(0, true);
         ui->goalsTableView->setColumnHidden(5, true);
 
-        // Set selection behavior to select entire rows
+
         ui->goalsTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-        // Set selection mode to allow only single selection
+
         ui->goalsTableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
-        // Automatically resize column widths
+
         ui->goalsTableView->resizeColumnsToContents();
 
-        // Make columns editable on double-click
-        //tableView->setEditTriggers(QAbstractItemView::DoubleClicked);
-
-        // Stretch columns in the horizontal header
-        //ui->goalsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->goalsTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
         ui->goalsTableView->verticalHeader()->setVisible(false);
 
         goalModel->select();
     } else {
-        // If the model is not defined, print a message to the console
         qDebug() << "Model is not defined.";
     }
 }
@@ -351,7 +355,7 @@ void MainWindow::on_dateEdit_userDateChanged(const QDate &date)
 
 void MainWindow::on_comboBox_currentTextChanged(const QString &dayOfWeek)
 {
-    dayOfWeekFilterProxyModel->setFilterKeyColumn(5); // Assuming the "dayOfWeek" column is at index 5
+    dayOfWeekFilterProxyModel->setFilterKeyColumn(5);
     dayOfWeekFilterProxyModel->setFilterFixedString(dayOfWeek);
 }
 
@@ -366,14 +370,12 @@ void MainWindow::on_actionLog_out_triggered()
 
 void MainWindow::on_actionChange_login_triggered()
 {
-    changeUsernameDialog = new ChangeUsername(dbManager, user);
     changeUsernameDialog->show();
 }
 
 
 void MainWindow::on_actionChange_password_triggered()
 {
-    changePasswordDialog = new ChangePassword(dbManager, user);
     changePasswordDialog->show();
 }
 

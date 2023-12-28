@@ -26,18 +26,18 @@ public:
     bool selectFromTable(User &) override;
     bool haveUser(QString &) override;
     bool haveGoalExercise(QString, QString, int, int, int, bool) override;
+    bool deleteExercise(QString login, QDate currentDay) override;
     bool deleteGoalExercise(QString, QString, int, int, int) override;
+    bool deleteGoalExercise(QString) override;
     Exercise returnProgresExercise(const QString& exerciseName) override;
     bool autoLog(User &) override;
     bool hasSavedCredentials() override;
     User returnSavedCredentials() override;
     int returnId(User *user) override;
     bool clearAutologinTable() override;
-    // Функція для зміни логіна в базі даних
     bool updateLogin(const QString& oldLogin, const QString& newLogin) override;
-    // Функція для зміни паролю в базі даних
     bool updatePassword(const QString& login, const QString& newPassword) override;
-
+    bool deleteScheduleExercise(QString , QString dayOfWeek) override;
 
 private:
     QSqlDatabase db;

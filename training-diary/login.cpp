@@ -51,7 +51,7 @@ void Login::attemptSignIn(const QString& login, const QString& password) {
 void Login::on_submitPB_clicked()
 {
     if(ui->loginLine->text().isEmpty() || ui->passwordLine->text().isEmpty()){
-        QMessageBox::critical(this, "Error", "All fields must be filled");
+        QMessageBox::warning(this, "Error", "All fields must be filled");
     }else{
         attemptSignIn(ui->loginLine->text(), ui->passwordLine->text());
     }

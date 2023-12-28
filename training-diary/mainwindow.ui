@@ -107,7 +107,7 @@ QTableView {
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -143,6 +143,13 @@ QTableView {
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deleteExercisePB">
+          <property name="text">
+           <string>clear</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -220,6 +227,16 @@ QTableView {
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="deleteExerciseSchedulePB">
+          <property name="locale">
+           <locale language="English" country="World"/>
+          </property>
+          <property name="text">
+           <string>clear</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="goalsTab">
@@ -241,6 +258,13 @@ QTableView {
          <widget class="QPushButton" name="addGoalPB">
           <property name="text">
            <string>add goal</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clearGoalPB">
+          <property name="text">
+           <string>clear</string>
           </property>
          </widget>
         </item>

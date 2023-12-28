@@ -51,6 +51,12 @@ private slots:
 
     void on_actionAbout_program_triggered();
 
+    void on_deleteExerciseSchedulePB_clicked();
+
+    void on_clearGoalPB_clicked();
+
+    void on_deleteExercisePB_clicked();
+
 private:
     Ui::MainWindow *ui;
     ExercizeDialog * exercizeDialog;
